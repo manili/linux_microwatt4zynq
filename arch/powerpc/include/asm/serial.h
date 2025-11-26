@@ -12,7 +12,7 @@
 /* Default baud base if not found in device-tree */
 #define BASE_BAUD ( 1843200 / 16 )
 
-#ifdef CONFIG_PPC_UDBG_16550
+#if defined(CONFIG_PPC_UDBG_16550) || defined(CONFIG_PPC_UDBG_XUARTPS)
 extern void find_legacy_serial_ports(void);
 #else
 #define find_legacy_serial_ports()	do { } while (0)

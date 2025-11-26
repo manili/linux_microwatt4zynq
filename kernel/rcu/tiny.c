@@ -123,6 +123,13 @@ static __latent_entropy void rcu_process_callbacks(void)
 		next = list->next;
 		prefetch(next);
 		debug_rcu_head_unqueue(list);
+		
+		/* Prevents kernel panics when while entering userspace.
+		 * Seems like this snippet forbids some compiler optimizations.
+		 */
+		volatile uint32_t dumb = 0xFEDC0000;
+		dumb++;
+		
 		rcu_reclaim_tiny(list);
 		list = next;
 	}

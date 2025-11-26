@@ -134,6 +134,13 @@ int serial_console_init(void)
 	else if (dt_is_compatible(devp, "ibm,opal-console-raw"))
 		rc = opal_console_init(devp, &serial_cd);
 #endif
+#ifdef CONFIG_PPC_MICROWATT4ZYNQ
+	else if (dt_is_compatible(devp, "xlnx,xuartps"    ) ||
+	         dt_is_compatible(devp, "xlnx,zynqmp-uart") ||
+	         dt_is_compatible(devp, "cdns,uart-r1p8"  ) ||
+	         dt_is_compatible(devp, "cdns,uart-r1p12" ))
+		rc = xuartps_console_init(devp, &serial_cd);
+#endif
 
 	/* Add other serial console driver calls here */
 

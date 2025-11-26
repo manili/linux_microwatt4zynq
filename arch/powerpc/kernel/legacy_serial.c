@@ -338,10 +338,10 @@ static void __init setup_legacy_serial_console(int console)
 			return;
 		udbg_uart_init_mmio(info->early_addr, stride);
 	} else {
-		/* Check if it's PIO and we support untranslated PIO */
-		if (port->iotype == UPIO_PORT && isa_io_special)
-			udbg_uart_init_pio(port->iobase, stride);
-		else
+		// /* Check if it's PIO and we support untranslated PIO */
+		// if (port->iotype == UPIO_PORT && isa_io_special)
+		// 	udbg_uart_init_pio(port->iobase, stride);
+		// else
 			return;
 	}
 
@@ -408,6 +408,21 @@ void __init find_legacy_serial_ports(void)
 			DBG("stdout is %pOF\n", stdout);
 	} else {
 		DBG(" no linux,stdout-path !\n");
+	}
+
+	/* Iterate over all the xuartps ports, looking for known parents */
+	for_each_compatible_node(np, "serial", "xlnx,zynqmp-uart") {
+		struct device_node *parent = of_get_parent(np);
+		if (!parent)
+			continue;
+		if (of_match_node(legacy_serial_parents, parent) != NULL) {
+			if (of_device_is_available(np)) {
+				index = add_legacy_soc_port(np, np);
+				if (index >= 0 && np == stdout)
+					legacy_serial_console = index;
+			}
+		}
+		of_node_put(parent);
 	}
 
 	/* Iterate over all the 16550 ports, looking for known parents */

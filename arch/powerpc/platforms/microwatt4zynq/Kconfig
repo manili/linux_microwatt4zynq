@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: GPL-2.0
+config PPC_MICROWATT4ZYNQ
+	depends on PPC_BOOK3S_64
+	bool "Microwatt SoC platform for Zynq"
+	select PPC_XICS
+	select PPC_ICS_NATIVE
+	select PPC_ICP_NATIVE
+	select PPC_UDBG_XUARTPS
+	select COMMON_CLK
+	help
+          This option enables support for Zynq-based Microwatt implementations.
+
